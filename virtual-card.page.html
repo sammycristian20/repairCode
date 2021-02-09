@@ -1,0 +1,70 @@
+<ion-header class="header-container" [ngClass]="{'has-blur': showingCoordinate}">
+    <div class="logo-background"></div>
+    <ion-toolbar class="bhd-toolbar bhd-header">
+        <ng-container *ngIf="hasVirtualCard && hasVirtualCardEnterprise">
+            <bhd-header [showBurgerBtn]="true" [showTrashBtn]="true" (onAddEmitter)="activateKeyCard()"  (onTrashEmitter)="trashVirtualCard()" >
+            </bhd-header>
+        </ng-container>
+        <ng-container *ngIf="!hasVirtualCard && hasVirtualCardEnterprise">
+            
+            <bhd-header [showBurgerBtn]="true" [showAddBtn]="true" [showTrashBtn]="true" (onAddEmitter)="activateKeyCard()"  (onTrashEmitter)="trashVirtualCard()" >
+            </bhd-header>
+        </ng-container>
+        <ng-container *ngIf="hasVirtualCard && !hasVirtualCardEnterprise">
+           
+            <bhd-header [showBurgerBtn]="true" [showAddBtn]="true" [showTrashBtn]="true" (onAddEmitter)="activateKeyCard()"  (onTrashEmitter)="trashVirtualCard()" >
+            </bhd-header>
+        </ng-container>
+        <ng-container *ngIf="!hasVirtualCard && !hasVirtualCardEnterprise">	
+           
+            <bhd-header [showBurgerBtn]="true">	
+            </bhd-header>	
+        </ng-container>
+        
+    </ion-toolbar>
+</ion-header>
+<ion-content [ngClass]="{'has-blur': showingCoordinate}" class="card-content ion-padding ion-text-center remove-margin" background="bhd-white">
+    <ng-container *ngIf="hasVirtualCard || hasVirtualCardEnterprise; else DefaultScreen">
+        <div class="card-types">
+
+            <div *ngIf="hasVirtualCard" (click)="ShowPersonal();" [class]="inactiveSelectP"><span> {{ 'personal' | translate}}</span></div>
+            <div *ngIf="hasVirtualCardEnterprise" (click)="ShowEmpresarial();"  [class]="inactiveSelectE"><span> {{ 'Empresarial' | translate}}</span></div>
+
+        </div>
+        <p class="touch" [innerHtml]="'touchTheNumber' | translate"></p>
+        <div *ngIf="showEnterpriseTDC; else elseBlock">
+            <div class="numbers-container empresarial">
+                 <div *ngFor="let number of numbers" (click)="showCoordinateModalEnterprise(number)" class="number">
+                    <span>{{ number }}</span>
+                </div>
+            </div>
+        </div>
+        <ng-template #elseBlock>
+            <div class="numbers-container">
+                <div *ngFor="let number of numbers" (click)="showCoordinate(number)" class="number">
+                    <span>{{ number }}</span>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-template #DefaultScreen>
+        <img class="keycard-info" src="assets/svgs/keycard-info.svg" alt="">
+        <p class="keycard-info-text" [innerHTML]="'keycard-info' | translate"></p>
+    </ng-template>
+</ion-content>
+<ion-footer [ngClass]="{'has-blur': showingCoordinate }">
+    <div *ngIf="showEnterpriseTDC; else elseBlock">
+        <div class="info-card" *ngIf="hasVirtualCardEnterprise">
+            <span class="label">{{ 'keyCardNumberEnterprise' | translate}}</span><span>{{keyCardNumberEnterprise}}</span>
+    </div>
+    </div>
+    <ng-template #elseBlock>
+        <div class="info-card" *ngIf="hasVirtualCard">
+            <span class="label">{{ 'keyCardNumber' | translate}}</span><span>{{keyCardNumber}}<span class="last-digit" (click)="showPopover($event)">{{ lastFourNumber }}</span></span>
+        </div>
+    </ng-template>
+    <ion-toolbar class="bhd-footer__toolbar" *ngIf="!hasVirtualCard && !hasVirtualCardEnterprise">
+        <bhd-footer [showLeft]="false" [oktxt]="'activateKeyCard' | translate" (onOkButton)="activateKeyCard()" >
+        </bhd-footer>
+    </ion-toolbar>
+</ion-footer>
